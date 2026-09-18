@@ -1,0 +1,92 @@
+[
+  {
+    "demo_purpose": "Multi-stressor, sequenced response: limiting factor (soil water) differs from the top-ranked biodiversity driver, and water-competing interventions are deferred.",
+    "example_message": "Our wheat field near Beed gets about 520 mm of erratic rain, SOC is 0.32%, soil is loamy and bird and insect numbers keep falling. What should we do?",
+    "state": {
+      "site_id": "beed_wheat", "name": "Beed, Marathwada - rainfed wheat monoculture",
+      "lat": 18.99, "lon": 75.76, "concern": "biodiversity_decline",
+      "soc_percent": 0.32, "ph": 8.1, "moisture_percent": 13, "texture_class": "loamy",
+      "annual_rainfall_mm": 520, "rainfall_pattern": "erratic", "mean_temp_c": 27.5, "drought_frequency": "high",
+      "land_use_class": "monoculture", "crop_system": "wheat", "cropping_intensity": "single", "field_margin_present": false,
+      "species_richness_index": 9, "habitat_diversity_index": 0.18, "pollinator_observed": "low", "ndvi_proxy": 0.22,
+      "fertilizer_intensity": "moderate", "pesticide_intensity": "moderate", "grazing_pressure": "low", "fragmentation_level": "moderate",
+      "field_sources": {}
+    },
+    "measurements": [
+      {"variable": "soc_percent", "value": 0.41, "date": "2021-03-01"},
+      {"variable": "soc_percent", "value": 0.36, "date": "2023-03-01"},
+      {"variable": "soc_percent", "value": 0.32, "date": "2025-03-01"},
+      {"variable": "ndvi_proxy", "value": 0.31, "date": "2021-03-01"},
+      {"variable": "ndvi_proxy", "value": 0.26, "date": "2023-03-01"},
+      {"variable": "ndvi_proxy", "value": 0.22, "date": "2025-03-01"},
+      {"variable": "species_richness_index", "value": 16, "date": "2021-03-01"},
+      {"variable": "species_richness_index", "value": 12, "date": "2023-03-01"},
+      {"variable": "species_richness_index", "value": 9, "date": "2025-03-01"},
+      {"variable": "moisture_percent", "value": 17, "date": "2021-03-01"},
+      {"variable": "moisture_percent", "value": 15, "date": "2023-03-01"},
+      {"variable": "moisture_percent", "value": 13, "date": "2025-03-01"},
+      {"variable": "habitat_diversity_index", "value": 0.24, "date": "2021-03-01"},
+      {"variable": "habitat_diversity_index", "value": 0.21, "date": "2023-03-01"},
+      {"variable": "habitat_diversity_index", "value": 0.18, "date": "2023-09-01"},
+      {"variable": "habitat_diversity_index", "value": 0.18, "date": "2025-03-01"}
+    ]
+  },
+  {
+    "demo_purpose": "User hypothesis weakly supported: the user blames pesticides; the data more strongly supports habitat loss, framed as ranking under uncertainty.",
+    "example_message": "I'm sure the pesticides are killing biodiversity on our groundnut farm in Anantapur.",
+    "state": {
+      "site_id": "anantapur_groundnut", "name": "Anantapur - groundnut monoculture",
+      "lat": 14.68, "lon": 77.6, "concern": "biodiversity_decline", "user_hypothesis": "pesticide_intensity",
+      "soc_percent": 0.4, "ph": 7.2, "moisture_percent": 10, "texture_class": "sandy",
+      "annual_rainfall_mm": 560, "rainfall_pattern": "low", "mean_temp_c": 28, "drought_frequency": "moderate",
+      "land_use_class": "monoculture", "crop_system": "groundnut", "cropping_intensity": "single", "field_margin_present": false,
+      "species_richness_index": 10, "habitat_diversity_index": 0.08, "pollinator_observed": "low", "ndvi_proxy": 0.3,
+      "fertilizer_intensity": "low", "pesticide_intensity": "moderate", "grazing_pressure": "moderate", "fragmentation_level": "high",
+      "field_sources": {}
+    },
+    "measurements": [
+      {"variable": "habitat_diversity_index", "value": 0.15, "date": "2021-06-01"},
+      {"variable": "habitat_diversity_index", "value": 0.11, "date": "2023-06-01"},
+      {"variable": "habitat_diversity_index", "value": 0.08, "date": "2025-06-01"},
+      {"variable": "species_richness_index", "value": 18, "date": "2021-06-01"},
+      {"variable": "species_richness_index", "value": 14, "date": "2023-06-01"},
+      {"variable": "species_richness_index", "value": 10, "date": "2025-06-01"},
+      {"variable": "ndvi_proxy", "value": 0.31, "date": "2021-06-01"},
+      {"variable": "ndvi_proxy", "value": 0.30, "date": "2023-06-01"},
+      {"variable": "ndvi_proxy", "value": 0.30, "date": "2025-06-01"}
+    ]
+  },
+  {
+    "demo_purpose": "Evidence transfer warning: the only quantified soil-carbon evidence (cover crops) comes from a wetter, largely temperate context; direction kept, magnitude not transferred.",
+    "example_message": "Soil carbon on our cotton vertisol near Dharwad is falling. Would cover crops help?",
+    "state": {
+      "site_id": "dharwad_cotton", "name": "Dharwad - rainfed cotton on Vertisol",
+      "lat": 15.46, "lon": 75.01, "concern": "soil_degradation",
+      "soc_percent": 0.45, "ph": 7.9, "moisture_percent": 28, "texture_class": "vertisol",
+      "annual_rainfall_mm": 780, "rainfall_pattern": "normal", "mean_temp_c": 25.5, "drought_frequency": "moderate",
+      "land_use_class": "monoculture", "crop_system": "cotton", "cropping_intensity": "continuous", "field_margin_present": true,
+      "species_richness_index": 15, "habitat_diversity_index": 0.3, "pollinator_observed": "moderate", "ndvi_proxy": 0.35,
+      "fertilizer_intensity": "high", "pesticide_intensity": "high", "grazing_pressure": "low", "fragmentation_level": "low",
+      "field_sources": {}
+    },
+    "measurements": [
+      {"variable": "soc_percent", "value": 0.58, "date": "2021-01-15"},
+      {"variable": "soc_percent", "value": 0.51, "date": "2023-01-15"},
+      {"variable": "soc_percent", "value": 0.45, "date": "2025-01-15"},
+      {"variable": "ndvi_proxy", "value": 0.36, "date": "2021-01-15"},
+      {"variable": "ndvi_proxy", "value": 0.35, "date": "2023-01-15"},
+      {"variable": "ndvi_proxy", "value": 0.35, "date": "2025-01-15"}
+    ]
+  },
+  {
+    "demo_purpose": "Insufficient data: the system declines to recommend and states which variables are missing and what each would resolve.",
+    "example_message": "We grow cotton with heavy pesticide use. How do we improve biodiversity?",
+    "state": {
+      "site_id": "unknown_plot", "name": "Unnamed plot - text only",
+      "concern": "biodiversity_decline",
+      "land_use_class": "monoculture", "crop_system": "cotton", "pesticide_intensity": "high",
+      "field_sources": {}
+    },
+    "measurements": []
+  }
+]

@@ -1,0 +1,26 @@
+id,from_variable,to_variable,weight,ctx_climate_zone,ctx_soil_texture,mechanism,source_id,verified
+R01,annual_rainfall_mm,moisture_percent,0.8,semi_arid|sub_humid,,Rainfall is the only water input to rainfed fields; low annual rainfall directly limits stored soil water.,srinivasarao_2013,false
+R02,rainfall_pattern,moisture_percent,0.6,,,Erratic or deficient rainfall produces long dry spells in which soil water is depleted.,ipcc_srccl_2019,false
+R03,drought_frequency,moisture_percent,0.6,,,Frequent droughts repeatedly deplete soil water reserves.,ipcc_srccl_2019,false
+R04,mean_temp_c,moisture_percent,0.4,,,Higher temperatures raise evaporative demand and accelerate soil water loss.,fao56_1998,false
+R05,texture_class,moisture_percent,0.5,,sandy,Coarse-textured soils have low water-holding capacity between field capacity and wilting point.,fao56_1998,false
+R06,soc_percent,moisture_percent,0.5,,,Soil organic matter improves aggregation and available water capacity.,lal_2004,false
+R07,moisture_percent,ndvi_proxy,0.8,semi_arid|sub_humid,,Soil water availability controls canopy growth in water-limited rainfed systems.,srinivasarao_2013,false
+R08,soc_percent,ndvi_proxy,0.5,,,Low soil organic carbon reduces nutrient supply and soil structure for crop growth.,lal_2004,false
+R09,ndvi_proxy,species_richness_index,0.4,,,Lower vegetation productivity reduces food and cover resources available to farmland species.,ipcc_srccl_2019,false
+R10,land_use_class,habitat_diversity_index,0.8,,,Simplified monoculture landscapes remove semi-natural habitat and structural heterogeneity.,tscharntke_2005,false
+R11,habitat_diversity_index,species_richness_index,0.8,,,Landscape heterogeneity and semi-natural habitat share are strong determinants of farmland species richness.,tscharntke_2005,false
+R12,field_margin_present,habitat_diversity_index,0.6,,,Field margins are a major share of permanent semi-natural habitat in arable landscapes.,marshall_moonen_2002,false
+R13,field_margin_present,pollinator_observed,0.6,,,Margins with flowering plants provide forage and nesting resources for pollinators.,albrecht_2020,false
+R14,fragmentation_level,species_richness_index,0.7,,,Fragmentation reduces habitat patch size and connectivity and increases edge effects causing species loss.,haddad_2015,false
+R15,fragmentation_level,pollinator_observed,0.6,,,Isolation from natural habitat reduces pollinator richness and visitation.,garibaldi_2011,false
+R16,pesticide_intensity,species_richness_index,0.7,,,Pesticide use is associated with reduced diversity of plants and invertebrates on farmland.,geiger_2010,false
+R17,pesticide_intensity,pollinator_observed,0.6,,,Pesticide exposure has lethal and sublethal effects on pollinators.,ipbes_2016,false
+R18,fertilizer_intensity,species_richness_index,0.5,,,High nitrogen input is associated with lower plant species richness on farmland.,kleijn_2009,false
+R19,grazing_pressure,species_richness_index,0.5,,,Heavy grazing reduces plant cover and alters community composition.,eldridge_2016,false
+R20,grazing_pressure,soc_percent,0.4,,,Heavy grazing reduces ground cover and soil function.,eldridge_2016,false
+R21,cropping_intensity,soc_percent,0.4,,,Continuous cropping with residue removal depletes soil organic carbon.,lal_2004,false
+R22,land_use_class,soc_percent,0.5,,,Intensive monoculture with low organic inputs depletes soil carbon relative to diversified or perennial systems.,lal_2004,false
+R23,land_use_class,species_richness_index,0.5,,,Monoculture cropping supports fewer species than mixed or perennial land uses.,beillouin_2021,false
+R24,habitat_diversity_index,pollinator_observed,0.7,,,Semi-natural habitat supplies floral resources and nesting sites for pollinators.,garibaldi_2011,false
+R25,pollinator_observed,species_richness_index,0.3,,,Pollinator decline reduces reproduction of insect-pollinated wild plants.,ipbes_2016,false

@@ -1,0 +1,9 @@
+id,name,climate_zone,lat_min,lat_max,lon_min,lon_max,priority,source_id
+Z01,Kerala and southern Western Ghats (approx.),humid,8.0,12.8,74.8,77.2,0,nbss_aer_1992
+Z02,Konkan coast and northern Western Ghats (approx.),humid,15.0,20.5,72.5,73.9,0,nbss_aer_1992
+Z03,Eastern plateau: Odisha and Chhattisgarh (approx.),sub_humid,18.5,23.5,80.5,87.5,1,nbss_aer_1992
+Z04,Deccan plateau: Marathwada and western Vidarbha (approx.),semi_arid,16.0,21.0,74.0,78.5,2,nbss_aer_1992
+Z05,Telangana and Rayalaseema (approx.),semi_arid,13.0,19.0,77.0,80.5,2,nbss_aer_1992
+Z06,North Karnataka plateau (approx.),semi_arid,13.5,17.5,74.8,77.5,3,nbss_aer_1992
+Z07,Tamil Nadu uplands (approx.),semi_arid,8.5,13.0,77.2,80.3,3,nbss_aer_1992
+Z08,Peninsular India fallback (approx.),semi_arid,8.0,24.0,72.0,88.0,9,nbss_aer_1992

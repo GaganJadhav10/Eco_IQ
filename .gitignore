@@ -1,0 +1,56 @@
+# Environment & Secret files
+.env
+.env.local
+.env.*.local
+*.env
+*.pem
+*.key
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Database & local data stores
+chroma_data/
+backend/chroma_data/
+*.sqlite3
+*.db
+
+# Node.js dependencies & build outputs
+node_modules/
+frontend/node_modules/
+dist/
+build/
+frontend/dist/
+.vite/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE, AI tooling & OS metadata
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.claude/
+.gemini/
+.agents/
+CLAUDE.md
+*.swp
+*.swo

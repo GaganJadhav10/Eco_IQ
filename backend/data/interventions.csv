@@ -1,0 +1,16 @@
+id,label,category,competes_for_water,addresses_variable,note,source_id
+residue_retention,Crop residue retention,water_conservation,false,,Uses existing biomass; adds no new water demand.,srinivasarao_2013
+mulching,Mulching,water_conservation,false,,Reduces evaporation; adds no new water demand.,srinivasarao_2013
+in_situ_moisture_conservation,Contour bunds / conservation furrows,water_conservation,false,,Earthworks capture runoff; adds no new water demand.,srinivasarao_2013
+broad_bed_furrow,Broad bed and furrow (Vertisols),water_conservation,false,,Land shaping; adds no new water demand.,wani_2003
+reduced_tillage,Reduced tillage with residue cover,water_conservation,false,,Reduces evaporation and disturbance.,pittelkow_2015
+farmyard_manure,Farmyard manure / organic amendments,soil_carbon,false,,Imported carbon input; adds no new water demand.,srinivasarao_2013
+cover_cropping,Cover cropping,soil_carbon,true,,Off-season cover crops transpire stored soil water in water-limited environments,unger_vigil_1998
+legume_intercropping,Legume intercropping,diversification,false,land_use_class,Short-duration legume intercrops are a standard dryland practice; treated as not competing,srinivasarao_2013
+crop_diversification,Crop rotation / diversification,diversification,false,land_use_class,Changes crop sequence rather than adding standing biomass,beillouin_2021
+agroforestry,Agroforestry / boundary trees,diversification,true,land_use_class,Establishing trees in semi-arid cropland creates root competition for scarce soil water before long-term benefits accrue,ong_leakey_1999
+field_margin_restoration,Field margin / hedgerow restoration,connectivity,false,field_margin_present,Uses uncropped strips; minimal competition with crop water,marshall_moonen_2002
+habitat_connectivity,Habitat corridors / connectivity,connectivity,false,fragmentation_level,Landscape-scale habitat linkage,haddad_2015
+pesticide_reduction_ipm,Integrated pest management / pesticide reduction,input_reduction,false,pesticide_intensity,Input change only,geiger_2010
+organic_management,Organic management,input_reduction,false,pesticide_intensity,Input change only,tuck_2014
+grazing_management,Grazing management,grazing,false,grazing_pressure,Management change only,eldridge_2016

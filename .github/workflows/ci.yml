@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 6 */3 * *"   # keep-alive ping so the free Render instance is warm for reviewers
+  workflow_dispatch:
+
+jobs:
+  backend-tests:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Reasoning core, scenarios, ChromaDB parity, LLM boundary (no network)
+        run: python -m pytest -q
+
+  frontend-build:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build
+
+  keep-alive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping live health endpoint
+        env:
+          APP_URL: ${{ vars.APP_URL }}
+        run: |
+          if [ -z "$APP_URL" ]; then echo "APP_URL repository variable not set"; exit 0; fi
+          curl -fsS --retry 5 --retry-delay 20 --max-time 90 "$APP_URL/api/health"
