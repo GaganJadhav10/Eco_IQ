@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Bot, ChevronDown, CornerDownLeft, Sparkles, User } from "lucide-react";
+import { Bot, ChevronDown, CornerDownLeft, Mic, MicOff, Sparkles, Square, User, Volume2 } from "lucide-react";
+import { speak, speechInputSupported, speechOutputSupported, stopSpeaking, useSpeechInput } from "../lib/speech.js";
+import { spokenSummary } from "../lib/spoken.js";
 import { SOURCE_LABEL, intLabel, varLabel } from "../lib/labels.js";
 import Markdown from "./Markdown.jsx";
 import { Badge, Spinner } from "./ui.jsx";
@@ -75,7 +77,29 @@ function Summary({ result }) {
 
 function AssistantMessage({ m }) {
   const [open, setOpen] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const spokenOnce = useRef(false);
   const fields = Object.keys(m.result?.extraction?.fields || {});
+
+  const toggleSpeech = () => {
+    if (speaking) {
+      stopSpeaking();
+      setSpeaking(false);
+      return;
+    }
+    setSpeaking(true);
+    speak(spokenSummary(m.result), { onEnd: () => setSpeaking(false) });
+  };
+
+  useEffect(() => () => stopSpeaking(), []);
+
+  // Asked by voice -> answer by voice, once per message.
+  useEffect(() => {
+    if (!m.speakAloud || !m.result || spokenOnce.current || !speechOutputSupported) return;
+    spokenOnce.current = true;
+    setSpeaking(true);
+    speak(spokenSummary(m.result), { onEnd: () => setSpeaking(false) });
+  }, [m.speakAloud, m.result]);
   return (
     <div className="flex animate-fade-up gap-2.5">
       <div className="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-forest-800 text-leaf-300"><Bot className="h-4 w-4" /></div>
@@ -93,12 +117,21 @@ function AssistantMessage({ m }) {
             </div>
           </div>
         )}
-        {m.result?.narration?.text && (
-          <button onClick={() => setOpen(!open)} className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-forest-600 hover:text-forest-700">
-            <ChevronDown className={`h-3 w-3 transition ${open ? "rotate-180" : ""}`} />
-            {open ? "Hide" : "Show"} full scientific narration
-          </button>
-        )}
+        <div className="mt-2 flex flex-wrap items-center gap-3">
+          {m.result?.narration?.text && (
+            <button onClick={() => setOpen(!open)} className="inline-flex items-center gap-1 text-xs font-medium text-forest-600 hover:text-forest-700">
+              <ChevronDown className={`h-3 w-3 transition ${open ? "rotate-180" : ""}`} />
+              {open ? "Hide" : "Show"} full scientific narration
+            </button>
+          )}
+          {speechOutputSupported && m.result && (
+            <button onClick={toggleSpeech}
+                    className={`inline-flex items-center gap-1 text-xs font-medium ${speaking ? "text-clay-500" : "text-forest-600 hover:text-forest-700"}`}>
+              {speaking ? <Square className="h-3 w-3" /> : <Volume2 className="h-3.5 w-3.5" />}
+              {speaking ? "Stop" : "Listen"}
+            </button>
+          )}
+        </div>
         {open && <Markdown text={m.result.narration.text} className="mt-2 border-t border-sand-100 pt-2" />}
       </div>
     </div>
@@ -108,6 +141,13 @@ function AssistantMessage({ m }) {
 export default function ChatPanel({ messages, onSend, busy }) {
   const [text, setText] = useState("");
   const listRef = useRef(null);
+  const usedVoice = useRef(false);
+  const mic = useSpeechInput({
+    onResult: (spoken) => {
+      usedVoice.current = true;
+      setText((t) => (t ? `${t} ${spoken}` : spoken));
+    },
+  });
 
   useEffect(() => {
     // Scroll only the message list, never the page (keeps the dashboard in view on phones).
@@ -118,7 +158,10 @@ export default function ChatPanel({ messages, onSend, busy }) {
   const submit = (e) => {
     e?.preventDefault();
     if (!text.trim() || busy) return;
-    onSend(text.trim());
+    if (mic.listening) mic.stop();
+    stopSpeaking();
+    onSend(text.trim(), usedVoice.current);
+    usedVoice.current = false;
     setText("");
   };
 
@@ -170,16 +213,30 @@ export default function ChatPanel({ messages, onSend, busy }) {
       </div>
 
       <form onSubmit={submit} className="border-t border-sand-200 bg-white p-3 sm:p-4">
-        <div className="flex items-end gap-2 rounded-2xl border border-sand-200 bg-sand-50 p-2 transition focus-within:border-forest-500 focus-within:ring-4 focus-within:ring-leaf-100">
-          <textarea value={text} onChange={(e) => setText(e.target.value)} rows={2}
+        <div className={`flex items-end gap-2 rounded-2xl border bg-sand-50 p-2 transition focus-within:ring-4 focus-within:ring-leaf-100 ${mic.listening ? "border-clay-500 ring-4 ring-clay-100" : "border-sand-200 focus-within:border-forest-500"}`}>
+          <textarea value={mic.interim ? `${text}${text ? " " : ""}${mic.interim}` : text}
+                    onChange={(e) => setText(e.target.value)} rows={2}
                     onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) submit(e); }}
-                    placeholder="e.g. 600 mm rain, sandy soil, SOC 0.4%, groundnut monoculture…"
+                    placeholder={mic.listening ? "Listening… speak now" : "e.g. 600 mm rain, sandy soil, SOC 0.4%, groundnut monoculture…"}
                     className="max-h-40 min-h-[44px] flex-1 resize-none bg-transparent px-2 py-1 text-sm outline-none placeholder:text-ink-400" />
+          {mic.supported && (
+            <button type="button" onClick={mic.toggle} disabled={busy}
+                    title={mic.listening ? "Stop the microphone" : "Speak instead of typing"}
+                    aria-label={mic.listening ? "Stop the microphone" : "Speak instead of typing"}
+                    className={`grid h-10 w-10 place-items-center rounded-xl border transition ${mic.listening ? "animate-pulse border-clay-500 bg-clay-500 text-white" : "border-sand-200 bg-white text-ink-600 hover:border-forest-500 hover:text-forest-700"}`}>
+              {mic.listening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+            </button>
+          )}
           <button type="submit" disabled={busy || !text.trim()} className="btn-primary h-10 px-3" aria-label="Send">
             <CornerDownLeft className="h-4 w-4" />
           </button>
         </div>
-        <p className="mt-1.5 px-1 text-[11px] text-ink-400">Enter to send · Shift+Enter for a new line</p>
+        <p className="mt-1.5 px-1 text-[11px] text-ink-400">
+          {mic.error ? <span className="text-clay-500">{mic.error}</span>
+            : mic.listening ? "Listening… tap the microphone again when you are done."
+            : speechInputSupported ? "Enter to send · Shift+Enter for a new line · or tap the microphone to speak"
+            : "Enter to send · Shift+Enter for a new line"}
+        </p>
       </form>
     </div>
   );

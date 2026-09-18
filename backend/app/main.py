@@ -35,6 +35,8 @@ DIST = Path(os.getenv("FRONTEND_DIST", Path(__file__).resolve().parents[2] / "fr
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",") if o.strip()],
+    # Vercel gives every deployment its own preview URL, so allow that pattern too.
+    allow_origin_regex=os.getenv("CORS_ORIGIN_REGEX", r"https://.*\.vercel\.app"),
     allow_methods=["*"],
     allow_headers=["*"],
 )

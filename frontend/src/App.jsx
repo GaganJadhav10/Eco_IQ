@@ -28,7 +28,7 @@ export default function App() {
 
   const goTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  const run = async (request, userMessage) => {
+  const run = async (request, userMessage, speakAloud = false) => {
     setBusy(true);
     setError(null);
     if (userMessage) setMessages((m) => [...m, { role: "user", ...userMessage }]);
@@ -37,7 +37,7 @@ export default function App() {
       setResult(r);
       if (r.conversation_id) {
         setConversationId(r.conversation_id);
-        setMessages((m) => [...m, { role: "assistant", result: r }]);
+        setMessages((m) => [...m, { role: "assistant", result: r, speakAloud }]);
       }
       setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
     } catch (e) {
@@ -48,7 +48,8 @@ export default function App() {
     }
   };
 
-  const send = (text) => run(() => api.chat({ message: text, conversation_id: conversationId }), { content: text });
+  const send = (text, byVoice = false) =>
+    run(() => api.chat({ message: text, conversation_id: conversationId }), { content: text }, byVoice);
 
   const pickSite = (s) => {
     setPanel("chat");

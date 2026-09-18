@@ -24,6 +24,13 @@ export default function Hero({ onStart, onExamples, health }) {
       <div className="absolute inset-0 bg-forest-950/25" />
 
       <div className="relative z-10 mx-auto w-full max-w-4xl px-5 py-24 text-center text-white sm:px-8">
+        {/* Same lockup as the header, larger and in capitals: the mark is the E of ECOIQ. */}
+        <span className="mb-7 flex items-baseline justify-center">
+          <img src="/logo-e-light.png" alt="EcoIQ" className="h-[52px] w-auto shrink-0 sm:h-[64px]" />
+          <span className="-ml-[6px] font-display text-[46px] font-semibold leading-none tracking-tight sm:-ml-[8px] sm:text-[57px]">
+            CO<span className="text-ochre-500">IQ</span>
+          </span>
+        </span>
         <span className="chip border-leaf-400/30 bg-leaf-400/10 text-leaf-300 backdrop-blur">
           <ShieldCheck className="h-3 w-3" /> Every number traces to a sourced record
         </span>

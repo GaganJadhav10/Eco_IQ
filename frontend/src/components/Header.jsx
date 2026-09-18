@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BookOpenText, Leaf, RotateCcw } from "lucide-react";
+import { BookOpenText, RotateCcw } from "lucide-react";
 
 export default function Header({ onOpenKnowledge, onReset, onNavigate, solid }) {
   const [scrolled, setScrolled] = useState(false);
@@ -21,11 +21,15 @@ export default function Header({ onOpenKnowledge, onReset, onNavigate, solid }) 
   return (
     <header className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ${opaque ? "border-b border-white/10 bg-forest-900/95 backdrop-blur" : "bg-transparent"}`}>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <button onClick={onReset} className="flex items-center gap-2.5 text-left text-white" title="Back to the top">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-leaf-400 to-forest-500 shadow-lg shadow-black/20">
-            <Leaf className="h-5 w-5 text-forest-950" />
+        {/* The logo mark IS the E of the wordmark, so it sits flush against "coIQ". */}
+        {/* In a baseline-aligned flex row an image's baseline is its bottom edge, so the foot of
+            the E lands on the text baseline and the leaf rises like an ascender. */}
+        <button onClick={onReset} className="flex items-baseline text-left text-white" title="Back to the top">
+          <img src="/logo-e-light.png" alt="EcoIQ" className="h-[25px] w-auto shrink-0" />
+          {/* pulled in by the leaf's overhang so the E and "co" read as one word */}
+          <span className="-ml-[3px] font-display text-[22px] font-semibold leading-none tracking-tight">
+            co<span className="text-ochre-500">IQ</span>
           </span>
-          <span className="font-display text-lg font-semibold leading-none tracking-tight">EcoIQ</span>
         </button>
 
         <nav className="hidden items-center gap-1 md:flex">
