@@ -6,15 +6,21 @@ Submission for the **Darukaa.Earth AI Biodiversity Intelligence Chatbot Challeng
 > selects context-appropriate interventions, where an LLM is used only as a conversational interface and
 > explanation layer, never as the source of scientific facts.
 
-**Live demo:** `<RENDER_URL>` · **Scope:** rainfed cropland, semi-arid to sub-humid agro-ecological zones, peninsular India.
+**Live demo:** `<VERCEL_URL>` · **API:** `<RENDER_URL>` · **Scope:** rainfed cropland, semi-arid to sub-humid agro-ecological zones, peninsular India.
 
 ```
 .
-├── backend/    FastAPI · Pydantic · deterministic reasoning engine · ChromaDB knowledge store · pytest
-├── frontend/   React 18 · Vite · Tailwind CSS · Axios · Recharts
-├── Dockerfile  builds frontend, serves it from the backend (one service, one URL)
-└── render.yaml
+├── backend/     FastAPI · Pydantic · deterministic reasoning engine · ChromaDB · pytest
+│                deployed on Render (Python web service)
+├── frontend/    React 18 · Vite · Tailwind CSS · Axios · Recharts · Web Speech API
+│                deployed on Vercel (static build)
+├── render.yaml  backend service definition
+└── Dockerfile   optional single-container build (frontend + backend on one origin)
 ```
+
+The two halves are independent: the frontend calls the API through `VITE_API_URL`, and the backend
+allows that origin through `CORS_ORIGINS`. The Dockerfile remains for anyone who prefers to run both
+from one process.
 
 ---
 
@@ -119,7 +125,7 @@ python scripts/ingest_docs.py
 Chunks are ~1,200 characters with page numbers preserved, embedded with the same offline function. With no documents present, nothing changes: supporting passages fall back to the curated causal mechanisms.
 
 ### Verification status
-Every claim starts `verified=false` with no page number, and **no page numbers or quotes were invented**. Only one effect size is included (Poeplau & Don 2015, 0.24-0.40 Mg C ha⁻¹ yr⁻¹). The UI shows an "unverified" badge, and confidence is reduced while most supporting claims are unverified.
+Every claim starts `verified=false` with no page number, and **no page numbers or quotes were invented**. Four claims carry quantified effect sizes proposed from their cited sources and awaiting manual confirmation; the rest support a direction of change only, and the output says so rather than inventing a number. The UI shows an "unverified" badge, and confidence is reduced while supporting claims are unverified.
 
 ## 6. Modelling choices (stated, not hidden)
 - Liebig's Law is adapted as a *limiting-constraint heuristic*, not a claim that biodiversity has a single cause.
@@ -144,14 +150,23 @@ Every claim starts `verified=false` with no page number, and **no page numbers o
 
 ## 8. Frontend
 
-React 18 + Vite + Tailwind CSS + Axios (`frontend/src/lib/api.js`). The layout has a conversation / guided site form panel next to a dashboard with five tabs:
-- **Diagnosis:** limiting-constraint gauge, hypothesis weighing, ranked drivers with pathways, suitability profile, confidence breakdown.
-- **Action plan:** staged timeline with rationale, per-step evidence and semantically retrieved mechanisms, and transfer warnings.
-- **Evidence:** eligible vs rejected claims with reasons, filterable by metric.
-- **Trends:** measurement history charts.
-- **Report & data:** narration with guard status, input provenance, raw Assessment JSON, printable report.
+React 18 + Vite + Tailwind CSS + Axios (`frontend/src/lib/api.js`). One scrolling page: a full-screen
+landing, how it works, the four worked examples, the input panel (free text **or** a guided form with a
+JSON view), then the assessment, which unfolds as five sections with a sticky jump bar:
+- **What's holding it back:** limiting-constraint gauge, hypothesis weighing, ranked drivers with pathways, suitability profile, confidence breakdown, and “sharpen this assessment” prompts.
+- **What to do, in order:** staged timeline with rationale, a measurable target per metric, quantified effects where the evidence has them, and transfer warnings.
+- **The evidence:** eligible vs rejected claims with reasons, filterable by metric.
+- **History:** measurement trend charts.
+- **Full write-up:** narration with guard status, input provenance, raw Assessment JSON, printable report.
 
-A **Knowledge base** drawer offers semantic search and the source list. The frontend contains display labels only, no science.
+A **Knowledge base** drawer offers semantic search and the source list.
+
+**Voice** (`frontend/src/lib/speech.js`). The browser's Web Speech API gives speech-to-text for the chat
+and text-to-speech for the answer: no extra service, no API key, nothing leaves the browser. A question
+asked by voice is answered aloud automatically; typed questions get a **Listen** button. The spoken
+summary is built from the same Assessment (`lib/spoken.js`), so voice introduces no new facts.
+
+The frontend contains display labels only, no science.
 
 ## 9. Demo scenarios (asserted in `backend/tests/test_scenarios.py`)
 1. **Beed: multi-stressor, sequenced.** The limiting factor is soil moisture, while the top biodiversity driver is habitat diversity. Water conservation goes first; agroforestry is deferred.
@@ -174,13 +189,33 @@ cd frontend
 npm install
 npm run dev                         # http://localhost:5173, proxies /api to :8000
 ```
-Production-style single server: `cd frontend && npm run build`, then run the backend, which serves `frontend/dist` at http://localhost:8000. Docker: `docker compose up --build`.
+Single-process alternative: `cd frontend && npm run build`, then run the backend, which serves
+`frontend/dist` at http://localhost:8000. Docker: `docker compose up --build`.
 
-Optional `backend/.env` (see `.env.example`): `GEMINI_API_KEY` enables LLM extraction and narration. Other settings: `CHROMA_PATH`, `EMBEDDING_MODEL`, `STORE=csv` (in-memory store), `CORS_ORIGINS`. For a separately hosted frontend, set `VITE_API_URL` in `frontend/.env`.
+Optional `backend/.env` (see `.env.example`): `GEMINI_API_KEY` enables LLM extraction and narration;
+without it the system runs fully deterministically. Other settings: `CHROMA_PATH`, `EMBEDDING_MODEL`,
+`STORE=csv` (in-memory store), `CORS_ORIGINS`. For the split deployment set `VITE_API_URL` in
+`frontend/.env` (see `frontend/.env.example`).
+
+Voice needs HTTPS or localhost. The microphone works in Chrome, Edge and Safari; Firefox can speak the
+answer but not listen.
 
 ## 11. CI/CD
-- **GitHub Actions** (`.github/workflows/ci.yml`): on every push, runs backend pytest (reasoning core, scenarios, ChromaDB parity, LLM boundary) and the frontend production build. A scheduled job pings `/api/health` every 3 days (set the repo variable `APP_URL`).
-- **Render**: a Docker web service from `render.yaml`. The multi-stage build compiles the frontend, installs the backend and pre-seeds ChromaDB. The free tier has no persistent disk, so the knowledge base is re-seeded from `backend/data/` on boot and conversations reset on restart. Auto-deploys on push to `main`.
+
+**GitHub Actions** (`.github/workflows/ci.yml`), on every push:
+- `backend-tests`: pytest over the reasoning core, the four scenarios, ChromaDB/CSV parity, the LLM boundary and output quality (49 tests, no network needed).
+- `frontend-build`: a production Vite build, so a broken frontend fails CI rather than the deploy.
+- `keep-alive` (scheduled, every 3 days): pings `/api/health` so the free backend is warm for reviewers. Set the repo variable `APP_URL` to the Render URL.
+
+**Backend on Render** (`render.yaml`): Python web service, root directory `backend`,
+`pip install -r requirements.txt` then `uvicorn app.main:app`, health check `/api/health`.
+Environment: `CORS_ORIGINS` (the Vercel origin), optional `GEMINI_API_KEY`, `EMBEDDING_MODEL`,
+`CHROMA_PATH`. The free tier has no persistent disk, so ChromaDB re-seeds from `backend/data/` on boot
+(a few seconds) and saved conversations reset on restart; the knowledge base and demos are unaffected.
+Free instances sleep after ~15 minutes idle, so the first request can take up to a minute.
+
+**Frontend on Vercel** (`frontend/vercel.json`): root directory `frontend`, Vite preset, one environment
+variable `VITE_API_URL` pointing at the Render URL. Both deploy automatically on push to `main`.
 
 ## 12. Known limitations
 - Small knowledge base (37 claims), verification in progress; see §5. Four claims carry quantified effect sizes; the rest support a direction of change only, and the output says so explicitly rather than inventing a number.
