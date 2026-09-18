@@ -6,7 +6,7 @@ Submission for the **Darukaa.Earth AI Biodiversity Intelligence Chatbot Challeng
 > selects context-appropriate interventions, where an LLM is used only as a conversational interface and
 > explanation layer, never as the source of scientific facts.
 
-**Live demo:** `<VERCEL_URL>` · **API:** `<RENDER_URL>` · **Scope:** rainfed cropland, semi-arid to sub-humid agro-ecological zones, peninsular India.
+**Live demo:** `eco-iq.vercel.app` · **API:** `https://eco-iq-nnuj.onrender.com` · **Scope:** rainfed cropland, semi-arid to sub-humid agro-ecological zones, peninsular India.
 
 ```
 .
